@@ -5,8 +5,8 @@ final case class WrongBlockNumberException(private val message: String = "",
   extends Exception(message, cause)
 
 
-class StackOverflowSnippet(val id: Int, val blockNumber: Int = 0) {
-  def getCode: String = {
+class StackOverflowSnippet(val id: Int, val blockNumber: Int = 0) extends Snippet {
+  override def getCode: String = {
     val codeRegex: Regex = "<pre><code>(.*?)</code></pre>".r
     val body = StackOverflowConnection.getAnswerBody(id)
 
