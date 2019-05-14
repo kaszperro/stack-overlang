@@ -1,7 +1,7 @@
 import scala.util.matching.Regex
 
-final case class WrongBlockNumberException(private val message: String = "",
-                                           private val cause: Throwable = None.orNull)
+final class WrongBlockNumberException(private val message: String = "",
+                                      private val cause: Throwable = None.orNull)
   extends Exception(message, cause)
 
 
@@ -13,9 +13,9 @@ class StackOverflowSnippet(val id: Int, val blockNumber: Int = 0) extends Snippe
     val codeBlocksList = codeRegex.findAllMatchIn(body).toList
 
     if (codeBlocksList.length <= blockNumber)
-      throw WrongBlockNumberException("not enough code blocks in array")
+      throw new WrongBlockNumberException("not enough code blocks in list")
 
-    val blockString = codeBlocksList(blockNumber).toString()
+    val blockString = codeBlocksList(blockNumber).toString
 
     blockString
       .substring(11, blockString.length - 13) //need to remove <pre><code> and </pre></code>

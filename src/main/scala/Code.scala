@@ -35,12 +35,13 @@ class Code private(content: String) {
 }
 
 object Code {
-  def build(snippets: Snippet*): Code = {
+  def apply(snippets: Snippet*): Code = {
     val strBuilder = new StringBuilder()
     for (snippet <- snippets)
       strBuilder.append(snippet.getCode).append('\n')
 
     new Code(strBuilder.toString())
   }
+
 }
 
