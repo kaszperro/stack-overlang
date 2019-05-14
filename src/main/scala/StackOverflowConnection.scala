@@ -14,8 +14,8 @@ object StackOverflowConnection {
     val responseString = Http(apiUrl + id.toString)
       .timeout(connTimeoutMs = 10000, readTimeoutMs = 10000)
       .params(Seq(
-        "key" -> Passwords.stackOverflowApiKey,
-        "client_secret" -> Passwords.stackOverflowApiSecret,
+        "key" -> Passwords.StackOverflowApiKey,
+        "client_secret" -> Passwords.StackOverflowApiSecret,
         "site" -> "stackoverflow.com",
         "filter" -> "withbody"
       ))
