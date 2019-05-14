@@ -21,12 +21,16 @@ object StackOverflowConnection {
       ))
       .asString
 
-    if (responseString.isError)
-      throw new StackOverflowWrongIdException("Cant query Stack Overflow for id: " + id.toString)
-
-
     val parsed = parse(responseString.body).getOrElse(Json.Null)
     val itemsJson = parsed.findAllByKey("items")
-    itemsJson.head.findAllByKey("body").head.toString()
+    val answerBody = itemsJson.head.findAllByKey("body")
+
+    if (answerBody.isEmpty)
+      throw new StackOverflowWrongIdException(
+        "There is no answer with id: %d on Stack Overflow"
+          .format(id)
+      )
+
+    answerBody.head.toString()
   }
 }
