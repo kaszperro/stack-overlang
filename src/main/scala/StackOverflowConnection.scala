@@ -9,16 +9,13 @@ final class StackOverflowWrongIdException(private val message: String = "",
 object StackOverflowConnection {
   private val apiUrl = "https://api.stackexchange.com/2.2/posts/"
 
-  private val apiKey = "KOFpauAI3)whX1PrGEZ0PA(("
-  private val apiSecret = "dlFsu*AyJyflclCbISXuKw(("
-
 
   def getAnswerBody(id: Int): String = {
     val responseString = Http(apiUrl + id.toString)
       .timeout(connTimeoutMs = 10000, readTimeoutMs = 10000)
       .params(Seq(
-        "key" -> apiKey,
-        "client_secret" -> apiSecret,
+        "key" -> Passwords.stackOverflowApiKey,
+        "client_secret" -> Passwords.stackOverflowApiSecret,
         "site" -> "stackoverflow.com",
         "filter" -> "withbody"
       ))
