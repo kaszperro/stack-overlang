@@ -9,8 +9,8 @@ class StackOverflowSnippet(val id: Int, val blockNumber: Int = 0) extends Snippe
   override def getCode: String = {
     codeBlocksList = codeBlocksList match {
       case None =>
-        val body = StackOverflowConnection.getAnswerAsString(id)
-        Some(StackOverflowParser.parseAnswerBodyToListOfCode(body))
+        val response = StackOverflowConnection.getAnswerAsString(id)
+        Some(StackOverflowParser.parseResponseToListOfCode(response))
       case _ => codeBlocksList
     }
 

@@ -21,18 +21,23 @@ object StackOverflowParser {
 
   def parseResponseToAnswer(response: String): StackOverflowAnswer = {
     val parsed = parse(response).getOrElse(Json.Null)
-    val maybeAnswers: Option[Json] =
-      parsed.hcursor.downField("items").focus
+    val maybeAnswer: Option[Json] = parsed.hcursor.downField("items").downArray.focus
 
-    maybeAnswers match {
-      case None => throw new RuntimeException("error while parsing")
-      case Some(answers) =>
-        answers.hcursor.as[List[StackOverflowAnswer]] match {
-          case Right(answersList) => if (answersList.isEmpty) throw new StackOverflowWrongIdException else answersList.head
-          case Left(error) => throw new RuntimeException(error)
-        }
-
+    maybeAnswer match {
+      case None => throw new StackOverflowWrongIdException
+      case Some(answer) => answer.as[StackOverflowAnswer].getOrElse(throw new RuntimeException)
     }
   }
+
+  def parseResponseToListOfCode(response: String): List[String] = {
+    val parsed = parse(response).getOrElse(Json.Null)
+
+    parseAnswerBodyToListOfCode(
+      parsed.hcursor
+        .downField("items").downArray.get[String]("body")
+        .getOrElse(throw new StackOverflowWrongIdException())
+    )
+  }
+
 
 }
