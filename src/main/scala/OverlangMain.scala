@@ -1,8 +1,9 @@
 object OverlangMain {
   def main(args: Array[String]): Unit = {
 
-   val snippet = new StackOverflowSnippet(21991967)
-   println(snippet.getCode)
+    val snippet = StackOverflowSnippet(21991967)
+    
+    println(snippet.getCode)
     /*
       Code(
          new StackOverflowSnippet(51015547))
