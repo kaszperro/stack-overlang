@@ -18,6 +18,5 @@ object OverlangMain {
 
     val ans = StackOverflowAnswer(51015547)
     println(ans.codeBlocks)
-
   }
 }
