@@ -13,3 +13,8 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic",
   "io.circe" %% "circe-parser"
 ).map(_ % circeVersion)
+
+val scursesVersion = "1.0.1"
+
+libraryDependencies += "net.team2xh" %% "onions" % scursesVersion
+libraryDependencies += "net.team2xh" %% "scurses" % scursesVersion
