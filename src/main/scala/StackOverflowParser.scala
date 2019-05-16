@@ -14,22 +14,22 @@ object StackOverflowParser {
     new StackOverflowAnswer(id, score, parseAnswerBodyToListOfCode(body), tags)
 
   def parseAnswerBodyToListOfCode(body: String): List[String] = {
-    val codeRegex: Regex = "(?<=<pre><code>)(?s).*(?=</code></pre>)".r
+    val codeRegex: Regex = "(?<=<pre><code>)(?s).*?(?=</code></pre>)".r
     codeRegex.findAllMatchIn(body).map(b => b.toString).toList
   }
 
 
-  def parseResponseToAnswer(response: String): StackOverflowAnswer = {
+  def parseAnswerResponseToAnswer(response: String): StackOverflowAnswer = {
     val parsed = parse(response).getOrElse(Json.Null)
     val maybeAnswer: Option[Json] = parsed.hcursor.downField("items").downArray.focus
 
     maybeAnswer match {
       case None => throw new StackOverflowWrongIdException
-      case Some(answer) => answer.as[StackOverflowAnswer].getOrElse(throw new RuntimeException)
+      case Some(answer) => answer.as[StackOverflowAnswer].right.get
     }
   }
 
-  def parseResponseToListOfCode(response: String): List[String] = {
+  def parseAnswerResponseToListOfCode(response: String): List[String] = {
     val parsed = parse(response).getOrElse(Json.Null)
 
     parseAnswerBodyToListOfCode(
@@ -39,5 +39,20 @@ object StackOverflowParser {
     )
   }
 
+  def parseSearchResponseToListOfAnswers(response: String): List[StackOverflowAnswer] = {
+    val parsed = parse(response).getOrElse(Json.Null)
 
+    val answersFiltered = parsed.hcursor.downField("items").downArray.rights.get.filter(
+      j => j.hcursor.get[String]("item_type").right.get == "answer"
+    )
+
+    answersFiltered.map(
+      j => {
+        parseAnswerResponseToAnswer(
+          StackOverflowConnection.getAnswerAsString(j.hcursor.get[Int]("answer_id").right.get)
+        )
+      }
+    ).toList
+
+  }
 }

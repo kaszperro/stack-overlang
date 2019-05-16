@@ -9,7 +9,7 @@ class StackOverflowAnswer(val id: Int,
 object StackOverflowAnswer {
   def apply(id: Int): StackOverflowAnswer = {
     val response = StackOverflowConnection.getAnswerAsString(id)
-    StackOverflowParser.parseResponseToAnswer(response)
+    StackOverflowParser.parseAnswerResponseToAnswer(response)
   }
 
 }

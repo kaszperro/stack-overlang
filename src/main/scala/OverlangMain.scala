@@ -1,9 +1,9 @@
 object OverlangMain {
   def main(args: Array[String]): Unit = {
 
-    val snippet = StackOverflowSnippet(21991967)
+    //val snippet = StackOverflowSnippet(21991967)
 
-    println(snippet.getCode)
+    //println(snippet.getCode)
     /*
       Code(
          new StackOverflowSnippet(51015547))
@@ -17,7 +17,13 @@ object OverlangMain {
          */
 
 
-    val ans = StackOverflowAnswer(51015547)
-    println(ans.codeBlocks)
+    // val ans = StackOverflowAnswer(26853961)
+    //println(ans.codeBlocks)
+    // println(ans.codeBlocks(0))
+
+
+    val res = StackOverflowConnection.getSearchResultAsString("python list comprehension")
+    val ans = StackOverflowParser.parseSearchResponseToListOfAnswers(res)
+    println(ans.head.codeBlocks)
   }
 }

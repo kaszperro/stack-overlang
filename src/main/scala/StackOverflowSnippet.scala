@@ -27,17 +27,17 @@ class StackOverflowSnippet(private var codeBlocks: List[String]) extends Snippet
 object StackOverflowSnippet {
   def apply(id: Int): StackOverflowSnippet = {
     new StackOverflowSnippet(
-      parseResponseToListOfCode(getAnswerAsString(id))
+      parseAnswerResponseToListOfCode(getAnswerAsString(id))
     )
   }
 
   def apply(id: Int, blockNumber: Int): StackOverflowSnippet = {
-    val codeList = parseResponseToListOfCode(getAnswerAsString(id))
+    val codeList = parseAnswerResponseToListOfCode(getAnswerAsString(id))
     new StackOverflowSnippet(List(codeList(blockNumber)))
   }
 
   def apply(id: Int, blocksNumbers: Range): StackOverflowSnippet = {
-    val codeList = parseResponseToListOfCode(getAnswerAsString(id))
+    val codeList = parseAnswerResponseToListOfCode(getAnswerAsString(id))
     new StackOverflowSnippet(for {i <- blocksNumbers.toList} yield codeList(i))
   }
 
