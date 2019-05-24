@@ -8,6 +8,7 @@ import net.team2xh.scurses.Scurses
 abstract class Widget(parent: FramePanel, values: Varying[_] *)
                      (implicit screen: Scurses) extends Component(Some(parent)) {
 
+
   parent.addWidget(this)
 
   for (value <- values)
@@ -27,6 +28,8 @@ abstract class Widget(parent: FramePanel, values: Varying[_] *)
   def redraw(focus: Boolean, theme: ColorScheme): Unit
 
   def handleKeypress(keypress: Int): Unit
+  def handleArrowPress(k: Int): Boolean = false
+
 
   override def innerWidth: Int = parent.innerWidth
   override def innerHeight: Int = parent.innerHeight

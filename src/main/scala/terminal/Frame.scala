@@ -29,6 +29,7 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
 
   var width = 0
   var height = 0
+
   def resize(size: (Int, Int)): Unit = {
     width = size._1 - 1
     height = size._2 - 1
@@ -37,6 +38,7 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
   resize(screen.size)
 
   def innerWidth = width
+
   def innerHeight = height - (if (debug.value) 1 else 0) - (if (title.isDefined) titleOffset else 0)
 
   var lastKeypress = -1
@@ -73,27 +75,48 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
           clear()
           panel.markAllForRedraw()
         case Keys.UP =>
+          var changeFocus = true
+          focusedPanel.getFocusedWidget foreach {
+            widget => if (widget.handleArrowPress(k)) changeFocus = false
+          }
           val l = panel.widgets.length
-          if (l > 0) {
+          if (changeFocus && l > 0) {
             if (!focusedPanel.focusPreviousWidget) {
               val next = focusedPanel.getNextDirection(_.top, _.left)
               next foreach (panel => switchFocusTo(panel))
             }
           }
         case Keys.DOWN =>
+          var changeFocus = true
+          focusedPanel.getFocusedWidget foreach {
+            widget => if (widget.handleArrowPress(k)) changeFocus = false
+          }
           val l = panel.widgets.length
-          if (l > 0) {
+          if (changeFocus && l > 0) {
             if (!focusedPanel.focusNextWidget) {
               val next = focusedPanel.getNextDirection(_.bottom, _.left)
               next foreach (panel => switchFocusTo(panel))
             }
           }
         case Keys.LEFT =>
-          val next = focusedPanel.getNextDirection(_.left, _.top)
-          next foreach (panel => switchFocusTo(panel))
+          var changeFocus = true
+          focusedPanel.getFocusedWidget foreach {
+            widget => if (widget.handleArrowPress(k)) changeFocus = false
+          }
+          if (changeFocus) {
+            val next = focusedPanel.getNextDirection(_.left, _.top)
+            next foreach (panel => switchFocusTo(panel))
+          }
+
         case Keys.RIGHT =>
-          val next = focusedPanel.getNextDirection(_.right, _.top)
-          next foreach (panel => switchFocusTo(panel))
+          var changeFocus = true
+          focusedPanel.getFocusedWidget foreach {
+            widget => if (widget.handleArrowPress(k)) changeFocus = false
+          }
+          if (changeFocus) {
+            val next = focusedPanel.getNextDirection(_.right, _.top)
+            next foreach (panel => switchFocusTo(panel))
+          }
         case Keys.CTRL_SPACE =>
           focusedPanel.nextTab()
         case k if k == Keys.TAB || k == Keys.SHIFT_TAB =>
