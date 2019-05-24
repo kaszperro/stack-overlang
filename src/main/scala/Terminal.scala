@@ -1,6 +1,5 @@
-import net.team2xh.onions.components.Frame
-import net.team2xh.onions.components.widgets.Input
-import net.team2xh.scurses.Scurses
+import net.team2xh.scurses.{Colors, Scurses}
+import terminal.{Frame, Input, TestWidget}
 
 
 object Terminal extends App {
@@ -8,12 +7,18 @@ object Terminal extends App {
     val frame = Frame(Some("Stack-Overlang"))
 
 
-    val input = Input(frame.panel)
+    new TestWidget(frame.panel, Colors.DIM_RED,
+      () => frame.panel.innerWidth / 2, () => frame.panel.innerHeight / 2,
+      () => 0, () => 0)
 
+    new TestWidget(frame.panel, Colors.DIM_BLUE,
+      () => frame.panel.innerWidth / 2, () => frame.panel.innerHeight / 2,
+      () => frame.panel.innerWidth / 4, () => frame.panel.innerHeight / 4)
 
+    Input(frame.panel, "text",
+      widthFun = () => frame.panel.innerWidth, heightFun = () => 1,
+      offsetYFun = () => frame.panel.innerHeight - 1)
 
-
-    // Display and launch event loop
     frame.show()
   }
 }
