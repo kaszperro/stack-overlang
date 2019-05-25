@@ -103,6 +103,7 @@ case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A =>
       )
 
       elements.update(actualFocusedElement, textPacker(myString))
+      parent.needsClear = true
     }
 
   }
