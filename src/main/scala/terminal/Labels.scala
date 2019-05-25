@@ -4,8 +4,9 @@ package terminal
 import net.team2xh.onions.Component
 import net.team2xh.onions.Themes.ColorScheme
 import net.team2xh.onions.components.{FramePanel, Widget}
-import net.team2xh.onions.utils.{Varying, TextWrap}
-import net.team2xh.scurses.{Keys, Colors, Scurses}
+import net.team2xh.onions.utils.TextWrap.ALIGN_LEFT
+import net.team2xh.onions.utils.{TextWrap, Varying}
+import net.team2xh.scurses.{Colors, Keys, Scurses}
 
 case class Labels[A](parent: FramePanel, elements: List[A], textExtractor: A => String, onAction: A => Unit,
                      widthFun: () => Int, heightFun: () => Int,
@@ -18,10 +19,16 @@ case class Labels[A](parent: FramePanel, elements: List[A], textExtractor: A => 
   private var firstLine = 0
 
 
+  def wrapText(text: String, width: Int, alignment: Int = ALIGN_LEFT): Seq[String] = {
+    TextWrap.wrapText(text, width, alignment)
+      .flatMap(l => l.grouped(width).toList)
+  }
+
+
   override def redraw(focus: Boolean, theme: ColorScheme): Unit = {
     var wrappedLines = 0
     for (i <- elements.indices) {
-      val lines = TextWrap.wrapText(textExtractor(elements(i)), innerWidth - 1, TextWrap.ALIGN_LEFT)
+      val lines = wrapText(textExtractor(elements(i)), innerWidth - 1, TextWrap.ALIGN_LEFT)
       for (line <- lines) {
         if (wrappedLines == firstLine) firstElementIndex = i
         val draw = wrappedLines >= firstLine
@@ -41,7 +48,7 @@ case class Labels[A](parent: FramePanel, elements: List[A], textExtractor: A => 
   private def getFirstLineOfElement(index: Int): Int = {
     var wrappedLines = 0
     for (i <- elements.indices) {
-      val lines = TextWrap.wrapText(textExtractor(elements(i)), innerWidth - 1, TextWrap.ALIGN_LEFT)
+      val lines = wrapText(textExtractor(elements(i)), innerWidth - 1, TextWrap.ALIGN_LEFT)
       if (i == index) return wrappedLines
       for (_ <- lines) {
         wrappedLines = wrappedLines + 1
@@ -52,7 +59,7 @@ case class Labels[A](parent: FramePanel, elements: List[A], textExtractor: A => 
 
   private def getLinesSize(index: Int): Int = {
     var wrappedLines = 0
-    val lines = TextWrap.wrapText(textExtractor(elements(index)), innerWidth - 1, TextWrap.ALIGN_LEFT)
+    val lines = wrapText(textExtractor(elements(index)), innerWidth - 1, TextWrap.ALIGN_LEFT)
     for (_ <- lines) {
       wrappedLines = wrappedLines + 1
     }
