@@ -1,10 +1,12 @@
 import java.io.{File, PrintWriter}
+
+import terminal.FilesManager
+
 import scala.sys.process.{Process, ProcessLogger}
 
 class Code private(content: String) {
   def runWith(command: String): Unit = {
-    val file = File.createTempFile("code-", ".txt")
-    save(file)
+    val file = FilesManager.writeToTempFile(content)
 
     val cmd = command + " " + file
     val procSeq = Seq("sh", "-c", cmd)
@@ -20,17 +22,6 @@ class Code private(content: String) {
     println(output.toString())
 
     file.delete()
-  }
-
-  def save(path: String): Unit = {
-    val pathWithHome = path.replaceFirst("^~", System.getProperty("user.home"))
-    save(new File(pathWithHome))
-  }
-
-  def save(file: File): Unit = {
-    val printWriter = new PrintWriter(file)
-    printWriter.print(content)
-    printWriter.close()
   }
 }
 

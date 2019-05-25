@@ -30,9 +30,9 @@ object Terminal extends App {
       listBuff += i + ". " + testString2
     }
 
-    val list = listBuff.toList
+    val array = listBuff.toArray
 
-    new Labels[String](frame.panel, list, s => s, s => {},
+    new Labels[String](frame.panel, array, s => s, s => s,
       () => frame.panel.innerWidth, () => frame.panel.innerHeight - 1,
       () => 0, () => 0)
 
