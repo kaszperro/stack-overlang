@@ -1,5 +1,6 @@
 import net.team2xh.scurses.{Colors, Scurses}
 import terminal.{Frame, Input, Labels, TestWidget}
+import sun.misc.Regexp;
 
 import scala.collection.mutable.ListBuffer
 
@@ -37,6 +38,17 @@ object Terminal extends App {
       () => 0, () => 0)
 
     Input(frame.panel, "text",
+      (text) => {
+        val addPattern = """add (\d+)""".r
+        text match {
+          case addPattern(number) => {
+            frame.close()
+            ChooseSnippetView.run()
+          }
+          case _ =>  println("Unknown command")
+        }
+        Unit
+      },
       widthFun = () => frame.panel.innerWidth, heightFun = () => 1,
       offsetYFun = () => frame.panel.innerHeight - 1)
 

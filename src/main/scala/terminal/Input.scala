@@ -5,7 +5,7 @@ import net.team2xh.onions.Themes.ColorScheme
 import net.team2xh.onions.utils.{Drawing, Varying}
 import net.team2xh.scurses.{Keys, Scurses}
 
-case class Input(parent: FramePanel, var defaultText: String = "Input",
+case class Input(parent: FramePanel, var defaultText: String = "Input", var enterAction : (String) => {},
                  widthFun: () => Int = () => 10, heightFun: () => Int = () => 1,
                  offsetXFun: () => Int = () => 0, offsetYFun: () => Int = () => 0)
                 (implicit screen: Scurses) extends Widget(parent) {
@@ -27,6 +27,7 @@ case class Input(parent: FramePanel, var defaultText: String = "Input",
 
   override def handleKeypress(keypress: Int): Unit = {
     keypress match {
+      case Keys.ENTER => enterAction(text.value);
       case Keys.BACKSPACE => if (cursorIndex > 0)
         text := text.value.init
       case char => text := text.value + keypress.toChar
