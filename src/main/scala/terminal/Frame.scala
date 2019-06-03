@@ -48,6 +48,11 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
     eventLoop()
   }
 
+  var showing = true;
+  def close(): Unit = {
+    showing = false;
+  }
+
   def clear(): Unit = {
     for (y <- 0 until height) {
       screen.put(0, y, " " * width, background = currentTheme.background)
@@ -66,7 +71,7 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
     val tree = panel.getTreeWalk
 
     var k = screen.keypress()
-    while (k != Keys.ESC && k != Keys.CTRL_C) {
+    while (showing && k != Keys.ESC && k != Keys.CTRL_C) {
       lastKeypress = k
       k match {
         case Keys.RESIZE =>
