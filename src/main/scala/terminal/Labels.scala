@@ -20,7 +20,11 @@ case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A =>
 
 
   def wrapText(text: String, width: Int, alignment: Int = ALIGN_LEFT): Seq[String] = {
-    TextWrap.wrapText(text, width, alignment)
+    text.split("\n")
+      .map {
+        case "" => " "
+        case x => x
+      }
       .flatMap(l => l.grouped(width).toList)
   }
 
