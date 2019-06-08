@@ -32,13 +32,12 @@ object Terminal extends App {
         val searchPattern = """search (.)+""".r
         text match {
           case addPattern(_) =>
-            val frame2 = Frame(Some("Stack-Overlang"))
-            stack.add(frame2)
+            //todo
           case searchPattern(word) =>
-            val res = StackOverflowConnection.getSearchResultAsString(text.substring("search".length+1))
-            val ans = StackOverflowParser.parseSearchResponseToListOfAnswers(res)
-            stack.add(new ChooseAnswerFrame(ans.toArray))
-          case _ => println("Unknown command")
+            val res = StackOverflowConnection.getSearchQuestionsAsString(text.substring("search".length+1))
+            val ans = StackOverflowParser.parseSearchResponseToListOfQuestions(res)
+            stack.add(new ChooseQuestionFrame(ans.toArray))
+          case _ => //todo
         }
         Unit
       },

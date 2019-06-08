@@ -4,7 +4,6 @@ import io.circe.{Decoder, HCursor, Json}
 import scala.util.matching.Regex
 
 object StackOverflowParser {
-
   implicit val StackOverflowAnswerDecoder: Decoder[StackOverflowAnswer] = (c: HCursor) => for {
     id <- c.get[Int]("answer_id")
     score <- c.get[Int]("score")
@@ -55,4 +54,31 @@ object StackOverflowParser {
     ).toList
 
   }
+
+  def parseSearchResponseToListOfQuestions(response: String): List[StackOverflowQuestion] = {
+    val parsed = parse(response).getOrElse(Json.Null)
+
+    val answersFiltered = parsed.hcursor.downField("items").downArray.rights.get
+    answersFiltered.map(
+      j => {
+        new StackOverflowQuestion(j.hcursor.get[Int]("question_id").right.get, j.hcursor.get[String]("title").right.get)
+      }
+    ).toList
+
+  }
+
+  def parseAnswersResponseToListOfAnswers(response: String): List[StackOverflowAnswer] = {
+    val parsed = parse(response).getOrElse(Json.Null)
+
+    val answersFiltered = parsed.hcursor.downField("items").downArray.rights.get
+
+    answersFiltered.map(
+      j => {
+        parseAnswerResponseToAnswer(
+          StackOverflowConnection.getAnswerAsString(j.hcursor.get[Int]("answer_id").right.get)
+        )
+      }
+    ).toList
+  }
+
 }

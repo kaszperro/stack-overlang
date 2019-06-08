@@ -8,6 +8,11 @@ import net.team2xh.scurses.{Keys, Scurses}
 case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = false,
                  var theme: Varying[ColorScheme] = Themes.default)
                 (implicit screen: Scurses) extends Component(None) {
+
+  private var stack : FrameStack = null
+  def onAttach(stack: FrameStack) = this.stack = stack
+  def getStack = stack
+
   def beforeDraw() = {
     clear()
     panel.markAllForRedraw()
@@ -39,8 +44,6 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
     width = size._1 - 1
     height = size._2 - 1
   }
-
-  resize(screen.size)
 
   def innerWidth = width
 
@@ -77,11 +80,6 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
 
     lastKeypress = k
     k match {
-      case Keys.RESIZE =>
-        val s = screen.size
-        resize(s)
-        clear()
-        panel.markAllForRedraw()
       case Keys.UP =>
         var changeFocus = true
         focusedPanel.getFocusedWidget foreach {
