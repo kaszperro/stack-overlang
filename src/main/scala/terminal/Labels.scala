@@ -8,9 +8,10 @@ import net.team2xh.onions.utils.TextWrap.ALIGN_LEFT
 import net.team2xh.onions.utils.{TextWrap, Varying}
 import net.team2xh.scurses.{Colors, Keys, Scurses}
 
-case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A => String, textPacker: String => A,
+case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A => String,
                      widthFun: () => Int, heightFun: () => Int,
-                     offsetXFun: () => Int, offsetYFun: () => Int)
+                     offsetXFun: () => Int, offsetYFun: () => Int,
+                     onEnterFun: A => Unit)
                     (implicit screen: Scurses) extends Widget(parent) {
 
   private var actualFocusedElement = 0
@@ -100,14 +101,15 @@ case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A =>
 
   override def handleKeypress(keypress: Int): Unit = {
     if (keypress == Keys.ENTER) {
+      onEnterFun(elements(actualFocusedElement))
 
-      val myString = ExternalEditor.editString(
-        parent,
-        textExtractor(elements(actualFocusedElement))
-      )
-
-      elements.update(actualFocusedElement, textPacker(myString))
-      parent.needsClear = true
+//      val myString = ExternalEditor.editString(
+//        parent,
+//        textExtractor(elements(actualFocusedElement))
+//      )
+//
+//      elements.update(actualFocusedElement, textPacker(myString))
+//      parent.needsClear = true
     }
 
   }

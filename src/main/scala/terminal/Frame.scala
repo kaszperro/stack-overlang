@@ -8,6 +8,11 @@ import net.team2xh.scurses.{Keys, Scurses}
 case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = false,
                  var theme: Varying[ColorScheme] = Themes.default)
                 (implicit screen: Scurses) extends Component(None) {
+  def beforeDraw() = {
+    clear()
+    panel.markAllForRedraw()
+  }
+
 
   theme.subscribe { () =>
     clear()
@@ -43,14 +48,10 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
 
   var lastKeypress = -1
 
-  def show(): Unit = {
-    redraw()
-    eventLoop()
-  }
 
-  var showing = true;
+  var toDelete = false;
   def close(): Unit = {
-    showing = false;
+    toDelete = false;
   }
 
   def clear(): Unit = {
@@ -67,85 +68,87 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
     focusedPanel.getFocusedWidget.foreach(_.needsRedraw = true)
   }
 
-  def eventLoop(): Unit = {
+  def event(k: Int): Unit = {
+    if(k == Keys.ESC) {
+      toDelete = true
+      return
+    }
     val tree = panel.getTreeWalk
 
-    var k = screen.keypress()
-    while (showing && k != Keys.ESC && k != Keys.CTRL_C) {
-      lastKeypress = k
-      k match {
-        case Keys.RESIZE =>
-          val s = screen.size
-          resize(s)
-          clear()
-          panel.markAllForRedraw()
-        case Keys.UP =>
-          var changeFocus = true
-          focusedPanel.getFocusedWidget foreach {
-            widget => if (widget.handleArrowPress(k)) changeFocus = false
-          }
-          val l = panel.widgets.length
-          if (changeFocus && l > 0) {
-            if (!focusedPanel.focusPreviousWidget) {
-              val next = focusedPanel.getNextDirection(_.top, _.left)
-              next foreach (panel => switchFocusTo(panel))
-            }
-          }
-        case Keys.DOWN =>
-          var changeFocus = true
-          focusedPanel.getFocusedWidget foreach {
-            widget => if (widget.handleArrowPress(k)) changeFocus = false
-          }
-          val l = panel.widgets.length
-          if (changeFocus && l > 0) {
-            if (!focusedPanel.focusNextWidget) {
-              val next = focusedPanel.getNextDirection(_.bottom, _.left)
-              next foreach (panel => switchFocusTo(panel))
-            }
-          }
-        case Keys.LEFT =>
-          var changeFocus = true
-          focusedPanel.getFocusedWidget foreach {
-            widget => if (widget.handleArrowPress(k)) changeFocus = false
-          }
-          if (changeFocus) {
-            val next = focusedPanel.getNextDirection(_.left, _.top)
+    lastKeypress = k
+    k match {
+      case Keys.RESIZE =>
+        val s = screen.size
+        resize(s)
+        clear()
+        panel.markAllForRedraw()
+      case Keys.UP =>
+        var changeFocus = true
+        focusedPanel.getFocusedWidget foreach {
+          widget => if (widget.handleArrowPress(k)) changeFocus = false
+        }
+        val l = panel.widgets.length
+        if (changeFocus && l > 0) {
+          if (!focusedPanel.focusPreviousWidget) {
+            val next = focusedPanel.getNextDirection(_.top, _.left)
             next foreach (panel => switchFocusTo(panel))
           }
+        }
+      case Keys.DOWN =>
+        var changeFocus = true
+        focusedPanel.getFocusedWidget foreach {
+          widget => if (widget.handleArrowPress(k)) changeFocus = false
+        }
+        val l = panel.widgets.length
+        if (changeFocus && l > 0) {
+          if (!focusedPanel.focusNextWidget) {
+            val next = focusedPanel.getNextDirection(_.bottom, _.left)
+            next foreach (panel => switchFocusTo(panel))
+          }
+        }
+      case Keys.LEFT =>
+        var changeFocus = true
+        focusedPanel.getFocusedWidget foreach {
+          widget => if (widget.handleArrowPress(k)) changeFocus = false
+        }
+        if (changeFocus) {
+          val next = focusedPanel.getNextDirection(_.left, _.top)
+          next foreach (panel => switchFocusTo(panel))
+        }
 
-        case Keys.RIGHT =>
-          var changeFocus = true
-          focusedPanel.getFocusedWidget foreach {
-            widget => if (widget.handleArrowPress(k)) changeFocus = false
-          }
-          if (changeFocus) {
-            val next = focusedPanel.getNextDirection(_.right, _.top)
-            next foreach (panel => switchFocusTo(panel))
-          }
-        case Keys.CTRL_SPACE =>
-          focusedPanel.nextTab()
-        case k if k == Keys.TAB || k == Keys.SHIFT_TAB =>
-          val t = if (k == Keys.TAB) tree else tree.reverse
-          val next = t.dropWhile(_.id != focusedPanel.id).tail.headOption
-          next match {
-            case Some(panel) =>
+      case Keys.RIGHT =>
+        var changeFocus = true
+        focusedPanel.getFocusedWidget foreach {
+          widget => if (widget.handleArrowPress(k)) changeFocus = false
+        }
+        if (changeFocus) {
+          val next = focusedPanel.getNextDirection(_.right, _.top)
+          next foreach (panel => switchFocusTo(panel))
+        }
+      case Keys.CTRL_SPACE =>
+        focusedPanel.nextTab()
+      case k if k == Keys.TAB || k == Keys.SHIFT_TAB =>
+        val t = if (k == Keys.TAB) tree else tree.reverse
+        val next = t.dropWhile(_.id != focusedPanel.id).tail.headOption
+        next match {
+          case Some(panel) =>
+            switchFocusTo(panel)
+          case None =>
+            if (k == Keys.TAB)
               switchFocusTo(panel)
-            case None =>
-              if (k == Keys.TAB)
-                switchFocusTo(panel)
-              else
-                switchFocusTo(tree.last)
-          }
-        case keypress =>
-          focusedPanel.getFocusedWidget foreach {
-            widget => widget.handleKeypress(keypress)
-          }
-      }
-      redraw()
-
-      k = screen.keypress()
+            else
+              switchFocusTo(tree.last)
+        }
+      case keypress =>
+        focusedPanel.getFocusedWidget foreach {
+          widget => widget.handleKeypress(keypress)
+        }
     }
+    redraw()
+
+
   }
+
 
   override def redraw(): Unit = {
     this.synchronized {
