@@ -2,7 +2,7 @@ import net.team2xh.scurses.Scurses
 import terminal.{Frame, Labels}
 
 
-class ChooseQuestionFrame(array : Array[StackOverflowQuestion])(implicit screen: Scurses) extends Frame(Some("Choose question")) {
+class ChooseQuestionFrame(array: Array[StackOverflowQuestion])(implicit screen: Scurses) extends Frame(Some("Choose question")) {
   new Labels[StackOverflowQuestion](panel, array, a => a.title,
     () => panel.innerWidth, () => panel.innerHeight,
     () => 0, () => 0, e => {
