@@ -1,4 +1,4 @@
-package terminal
+package overlang.terminal
 
 import net.team2xh.scurses.{Keys, Scurses}
 

@@ -1,10 +1,12 @@
-import stackOverflowBackend.{StackOverflowConnection, StackOverflowParser}
+package overlang
 
-import scala.collection.mutable.ListBuffer
-import scala.util.matching.Regex
+import java.io.File
+
+import overlang.stackOverflowBackend.{StackOverflowConnection, StackOverflowParser}
 
 object OverlangMain {
   def main(args: Array[String]): Unit = {
+    ActiveFile.setFile(File.createTempFile("overlang", "tmp"))
 
 
     val myText = StackOverflowConnection.getAnswerAsString(466376)

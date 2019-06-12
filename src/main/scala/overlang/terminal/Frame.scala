@@ -1,4 +1,4 @@
-package terminal
+package overlang.terminal
 
 import net.team2xh.onions.Themes.ColorScheme
 import net.team2xh.onions.utils.Varying

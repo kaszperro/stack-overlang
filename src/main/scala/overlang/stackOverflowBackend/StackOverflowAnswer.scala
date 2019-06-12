@@ -1,7 +1,7 @@
-package stackOverflowBackend
+package overlang.stackOverflowBackend
 
 import net.team2xh.scurses.Scurses
-import terminal.{ChooseAnswerFrame, Frame, FramePanel, SearchResult}
+import overlang.terminal.{ChooseAnswerFrame, Frame, FramePanel, SearchResult}
 
 import scala.concurrent.duration.Duration
 

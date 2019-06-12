@@ -1,8 +1,20 @@
-import net.team2xh.scurses.{Colors, Scurses}
-import terminal._
+package overlang
 
+import java.io.File
+
+import net.team2xh.scurses.Scurses
+import overlang.terminal.{ExternalEditor, Frame, FrameStack, Input, SearchResultsFrame}
 
 object Terminal extends App {
+  def saveAs(str: String): Unit = {
+    val text: String = ActiveFile.readAll
+    ActiveFile.setFile(new File(str))
+    ActiveFile.save(text)
+  }
+
+  ActiveFile.setFile(File.createTempFile("overlang", "tmp"))
+
+
   Scurses { implicit screen =>
     val stack = new FrameStack
     val frame = Frame(Some("Stack-Overlang"))
@@ -27,14 +39,14 @@ object Terminal extends App {
       (text) => {
         val addPattern = """add (\d+)""".r
         val searchPattern = """search (.)+""".r
+        val saveAsPattern = """saveas (.)+""".r
+        val editPattern = """edit""".r
         text match {
           case addPattern(_) =>
-          //todo
-          case searchPattern(word) =>
-            //val res = StackOverflowConnection.getSearchQuestionsAsString(text.substring("search".length + 1))
-            //val ans = StackOverflowParser.parseSearchResponseToListOfQuestions(res)
-            stack.add(SearchResultsFrame(text.substring("search".length + 1)))
-          case _ => //todo
+          case saveAsPattern(_) => saveAs(text.substring("saveas".length + 1))
+          case searchPattern(word) => stack.add(SearchResultsFrame(text.substring("search".length + 1)))
+          case editPattern() => ExternalEditor.editFile(frame, ActiveFile.getFile)
+          case _ =>
         }
         Unit
       },

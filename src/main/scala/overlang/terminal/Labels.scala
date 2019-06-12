@@ -1,7 +1,6 @@
-package terminal
+package overlang.terminal
 
 import java.util.concurrent.TimeUnit
-
 
 import net.team2xh.onions.Component
 import net.team2xh.onions.Themes.ColorScheme
@@ -9,7 +8,8 @@ import net.team2xh.onions.components.{FramePanel, Widget}
 import net.team2xh.onions.utils.TextWrap.ALIGN_LEFT
 import net.team2xh.onions.utils.{TextWrap, Varying}
 import net.team2xh.scurses.{Colors, Keys, Scurses}
-import stackOverflowBackend.{StackOverflowAnswer, StackOverflowConnection, StackOverflowParser, StackOverflowQuestion}
+import overlang.ActiveFile
+import overlang.stackOverflowBackend.{StackOverflowAnswer, StackOverflowConnection, StackOverflowParser, StackOverflowQuestion}
 
 case class Labels[T <: SearchResult](parent: FramePanel, elements: Array[T],
                                      widthFun: () => Int, heightFun: () => Int,
@@ -110,6 +110,8 @@ case class Labels[T <: SearchResult](parent: FramePanel, elements: Array[T],
           answer.setTempString("added to code")
           frame.panel.markAllForRedraw()
           frame.redraw()
+
+          ActiveFile.append(answer.codeBlocks.mkString)
 
           Thread.sleep(timeToWait)
           answer.removeTempString()

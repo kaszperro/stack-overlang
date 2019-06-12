@@ -1,4 +1,4 @@
-package terminal
+package overlang.terminal
 
 import java.io.{File, PrintWriter}
 

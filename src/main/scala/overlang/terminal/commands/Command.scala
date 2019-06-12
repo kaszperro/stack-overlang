@@ -1,4 +1,4 @@
-package terminal.commands
+package overlang.terminal.commands
 
 trait Command {
   def run(): Unit

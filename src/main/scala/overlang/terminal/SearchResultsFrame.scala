@@ -1,8 +1,8 @@
-package terminal
+package overlang.terminal
 
 
 import net.team2xh.scurses.Scurses
-import stackOverflowBackend.{StackOverflowConnection, StackOverflowParser}
+import overlang.stackOverflowBackend.{StackOverflowConnection, StackOverflowParser}
 
 class SearchResultsFrame(array: Array[SearchResult])(implicit screen: Scurses) extends Frame(Some("Search Results")) {
 

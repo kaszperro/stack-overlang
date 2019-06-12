@@ -1,7 +1,7 @@
-import java.io.{File, PrintWriter}
+package overlang
 
-import stackOverflowBackend.Snippet
-import terminal.FilesManager
+import overlang.stackOverflowBackend.Snippet
+import overlang.terminal.FilesManager
 
 import scala.sys.process.{Process, ProcessLogger}
 

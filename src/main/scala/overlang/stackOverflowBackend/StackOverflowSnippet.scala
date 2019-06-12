@@ -1,6 +1,6 @@
-package stackOverflowBackend
+package overlang.stackOverflowBackend
 
-import stackOverflowBackend.StackOverflowParser.parseAnswerResponseToListOfCode
+import overlang.stackOverflowBackend.StackOverflowParser.parseAnswerResponseToListOfCode
 
 final class WrongBlockNumberException(private val message: String = "",
                                       private val cause: Throwable = None.orNull)

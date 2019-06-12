@@ -1,8 +1,8 @@
-package stackOverflowBackend
+package overlang.stackOverflowBackend
 
 import io.circe.parser.parse
 import io.circe.{Decoder, DecodingFailure, HCursor, Json}
-import terminal.SearchResult
+import overlang.terminal.SearchResult
 
 import scala.util.matching.Regex
 

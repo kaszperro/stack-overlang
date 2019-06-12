@@ -1,4 +1,4 @@
-package terminal
+package overlang.terminal
 
 import scala.concurrent.duration.Duration
 

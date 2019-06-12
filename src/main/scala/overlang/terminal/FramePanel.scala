@@ -1,4 +1,4 @@
-package terminal
+package overlang.terminal
 
 
 import net.team2xh.onions.Themes.ColorScheme
@@ -484,5 +484,5 @@ case class FramePanel(parent: Component)
     case Some(panel) => Seq(verticalDepth) ++ panel.verticalDepths
   }
 
-  override def toString: String = s"terminal.FramePanel #$id"
+  override def toString: String = s"overlang.terminal.FramePanel #$id"
 }
