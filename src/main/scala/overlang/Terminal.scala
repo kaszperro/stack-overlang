@@ -38,13 +38,13 @@ object Terminal extends App {
     Input(frame.panel, "text",
       (text) => {
         val addPattern = """add (\d+)""".r
-        val searchPattern = """search (.)+""".r
-        val saveAsPattern = """saveas (.)+""".r
+        val searchPattern = """search (.+)""".r
+        val saveAsPattern = """saveas (.+)""".r
         val editPattern = """edit""".r
         text match {
           case addPattern(_) =>
-          case saveAsPattern(_) => saveAs(text.substring("saveas".length + 1))
-          case searchPattern(word) => stack.add(SearchResultsFrame(text.substring("search".length + 1)))
+          case saveAsPattern(filePath) => saveAs(filePath)
+          case searchPattern(text) => stack.add(SearchResultsFrame(text))
           case editPattern() => ExternalEditor.editFile(frame, ActiveFile.getFile)
           case _ =>
         }
