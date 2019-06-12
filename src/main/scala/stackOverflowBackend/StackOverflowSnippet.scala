@@ -1,10 +1,12 @@
-import StackOverflowConnection._
-import StackOverflowParser._
+package stackOverflowBackend
+
+import stackOverflowBackend.StackOverflowParser.parseAnswerResponseToListOfCode
 
 final class WrongBlockNumberException(private val message: String = "",
                                       private val cause: Throwable = None.orNull)
   extends Exception(message, cause)
 
+import StackOverflowConnection.getAnswerAsString
 
 class StackOverflowSnippet(private var codeBlocks: List[String]) extends Snippet {
 
@@ -21,7 +23,7 @@ class StackOverflowSnippet(private var codeBlocks: List[String]) extends Snippet
   def block(blockIndex: Int): StackOverflowSnippet = {
     new StackOverflowSnippet(List(codeBlocks(blockIndex)))
   }
-  
+
 }
 
 object StackOverflowSnippet {

@@ -1,8 +1,5 @@
 import net.team2xh.scurses.{Colors, Scurses}
-import terminal.{Frame, FrameStack, Input, Labels, TestWidget}
-import sun.misc.Regexp
-
-import scala.collection.mutable.ListBuffer
+import terminal._
 
 
 object Terminal extends App {
@@ -10,21 +7,21 @@ object Terminal extends App {
     val stack = new FrameStack
     val frame = Frame(Some("Stack-Overlang"))
 
-//
-//    var testString = "Siemanko testowy tekst"
-//    var testString2 = "Siemanko testowy tekst długi bardzo ijdsiadjaoisdjoisajdoiasjdoiajsoidaisodhasoiudhoiashdioashdoiasi"
-//
-//    var listBuff = new ListBuffer[String]
-//    for (i <- 1 to 20) {
-//      listBuff += i + ". " + testString
-//      listBuff += i + ". " + testString2
-//    }
-//
-//    val array = listBuff.toArray
+    //
+    //    var testString = "Siemanko testowy tekst"
+    //    var testString2 = "Siemanko testowy tekst długi bardzo ijdsiadjaoisdjoisajdoiasjdoiajsoidaisodhasoiudhoiashdioashdoiasi"
+    //
+    //    var listBuff = new ListBuffer[String]
+    //    for (i <- 1 to 20) {
+    //      listBuff += i + ". " + testString
+    //      listBuff += i + ". " + testString2
+    //    }
+    //
+    //    val array = listBuff.toArray
 
-//    new Labels[String](frame.panel, array, s => s, s => s,
-//      () => frame.panel.innerWidth, () => frame.panel.innerHeight - 1,
-//      () => 0, () => 0)
+    //    new Labels[String](frame.panel, array, s => s, s => s,
+    //      () => frame.panel.innerWidth, () => frame.panel.innerHeight - 1,
+    //      () => 0, () => 0)
 
     Input(frame.panel, "text",
       (text) => {
@@ -32,11 +29,11 @@ object Terminal extends App {
         val searchPattern = """search (.)+""".r
         text match {
           case addPattern(_) =>
-            //todo
+          //todo
           case searchPattern(word) =>
-            val res = StackOverflowConnection.getSearchQuestionsAsString(text.substring("search".length+1))
-            val ans = StackOverflowParser.parseSearchResponseToListOfQuestions(res)
-            stack.add(new ChooseQuestionFrame(ans.toArray))
+            //val res = StackOverflowConnection.getSearchQuestionsAsString(text.substring("search".length + 1))
+            //val ans = StackOverflowParser.parseSearchResponseToListOfQuestions(res)
+            stack.add(SearchResultsFrame(text.substring("search".length + 1)))
           case _ => //todo
         }
         Unit

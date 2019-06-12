@@ -1,5 +1,6 @@
 import java.io.{File, PrintWriter}
 
+import stackOverflowBackend.Snippet
 import terminal.FilesManager
 
 import scala.sys.process.{Process, ProcessLogger}

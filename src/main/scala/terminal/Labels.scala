@@ -1,5 +1,7 @@
 package terminal
 
+import java.util.concurrent.TimeUnit
+
 
 import net.team2xh.onions.Component
 import net.team2xh.onions.Themes.ColorScheme
@@ -7,12 +9,12 @@ import net.team2xh.onions.components.{FramePanel, Widget}
 import net.team2xh.onions.utils.TextWrap.ALIGN_LEFT
 import net.team2xh.onions.utils.{TextWrap, Varying}
 import net.team2xh.scurses.{Colors, Keys, Scurses}
+import stackOverflowBackend.{StackOverflowAnswer, StackOverflowConnection, StackOverflowParser, StackOverflowQuestion}
 
-case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A => String,
-                     widthFun: () => Int, heightFun: () => Int,
-                     offsetXFun: () => Int, offsetYFun: () => Int,
-                     onEnterFun: A => Unit)
-                    (implicit screen: Scurses) extends Widget(parent) {
+case class Labels[T <: SearchResult](parent: FramePanel, elements: Array[T],
+                                     widthFun: () => Int, heightFun: () => Int,
+                                     offsetXFun: () => Int, offsetYFun: () => Int)
+                                    (implicit screen: Scurses) extends Widget(parent) {
 
   private var actualFocusedElement = 0
   private var firstElementIndex = 0
@@ -33,13 +35,13 @@ case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A =>
   override def redraw(focus: Boolean, theme: ColorScheme): Unit = {
     var wrappedLines = 0
     for (i <- elements.indices) {
-      val lines = wrapText(textExtractor(elements(i)), innerWidth - 1, TextWrap.ALIGN_LEFT)
+      val lines = wrapText(elements(i).extractText() + "\n--------------------\n", innerWidth - 1, TextWrap.ALIGN_LEFT)
       for (line <- lines) {
         if (wrappedLines == firstLine) firstElementIndex = i
         val draw = wrappedLines >= firstLine
         if (draw) {
-          val color = if (i == actualFocusedElement) Colors.BRIGHT_GREEN else Colors.BRIGHT_RED
-          val color2 = if (focus) Colors.DIM_BLUE else Colors.DIM_MAGENTA
+          val color = if (i == actualFocusedElement) Colors.BRIGHT_WHITE else Colors.fromHex("7F7F7F")
+          val color2 = if (focus) Colors.DIM_BLACK else Colors.DIM_BLACK
           screen.put(0, wrappedLines - firstLine, " " + line + " " * (innerWidth - line.length - 1), color, color2)
         }
         wrappedLines = wrappedLines + 1
@@ -53,7 +55,7 @@ case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A =>
   private def getFirstLineOfElement(index: Int): Int = {
     var wrappedLines = 0
     for (i <- elements.indices) {
-      val lines = wrapText(textExtractor(elements(i)), innerWidth - 1, TextWrap.ALIGN_LEFT)
+      val lines = wrapText(elements(i).extractText() + "\n--------------------\n", innerWidth - 1, TextWrap.ALIGN_LEFT)
       if (i == index) return wrappedLines
       for (_ <- lines) {
         wrappedLines = wrappedLines + 1
@@ -64,7 +66,7 @@ case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A =>
 
   private def getLinesSize(index: Int): Int = {
     var wrappedLines = 0
-    val lines = wrapText(textExtractor(elements(index)), innerWidth - 1, TextWrap.ALIGN_LEFT)
+    val lines = wrapText(elements(index).extractText() + "\n--------------------\n", innerWidth - 1, TextWrap.ALIGN_LEFT)
     for (_ <- lines) {
       wrappedLines = wrappedLines + 1
     }
@@ -100,16 +102,25 @@ case class Labels[A](parent: FramePanel, elements: Array[A], textExtractor: A =>
 
 
   override def handleKeypress(keypress: Int): Unit = {
+    val timeToWait = 500
     if (keypress == Keys.ENTER) {
-      onEnterFun(elements(actualFocusedElement))
+      val frame = parent.parent.asInstanceOf[Frame]
+      elements(actualFocusedElement) match {
+        case answer: StackOverflowAnswer =>
+          answer.setTempString("added to code")
+          frame.panel.markAllForRedraw()
+          frame.redraw()
 
-//      val myString = ExternalEditor.editString(
-//        parent,
-//        textExtractor(elements(actualFocusedElement))
-//      )
-//
-//      elements.update(actualFocusedElement, textPacker(myString))
-//      parent.needsClear = true
+          Thread.sleep(timeToWait)
+          answer.removeTempString()
+          frame.panel.markAllForRedraw()
+
+
+        case question: StackOverflowQuestion =>
+          val res = StackOverflowConnection.getAnswersByQuestionId(question.id)
+          val ans = StackOverflowParser.parseAnswersResponseToListOfAnswers(res)
+          frame.getStack.add(new ChooseAnswerFrame(ans.filter(a => a.codeBlocks.nonEmpty).toArray))
+      }
     }
 
   }

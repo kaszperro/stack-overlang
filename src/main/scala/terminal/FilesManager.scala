@@ -26,6 +26,20 @@ object FilesManager {
     tempFi
   }
 
+  def writeToFile(content: String, filePath: String): Unit = {
+    val file = new File(filePath)
+    file.createNewFile()
+
+
+    new PrintWriter(file) {
+      try {
+        print(content)
+      } finally {
+        close()
+      }
+    }
+  }
+
   def readFile(file: File): String = {
     Source.fromFile(file).getLines().mkString("\n")
   }

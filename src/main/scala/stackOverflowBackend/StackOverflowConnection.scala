@@ -1,3 +1,5 @@
+package stackOverflowBackend
+
 import scalaj.http.Http
 import Passwords._
 
@@ -45,7 +47,7 @@ object StackOverflowConnection {
 
   def getSearchResultAsString(searchQuery: String): String = {
     Http(searchApiUrl)
-      .timeout(connTimeoutMs = 10000, readTimeoutMs = 10000)
+      .timeout(connTimeoutMs = 5000, readTimeoutMs = 5000)
       .params(Seq(
         "key" -> StackOverflowApiKey,
         "client_secret" -> StackOverflowApiSecret,
