@@ -6,7 +6,7 @@ import overlang.stackOverflowBackend.{StackOverflowConnection, StackOverflowPars
 
 class SearchResultsFrame(array: Array[SearchResult])(implicit screen: Scurses) extends Frame(Some("Search Results")) {
 
-  new Labels(panel, array,
+  new ClickableLabels(panel, array,
     () => panel.innerWidth, () => panel.innerHeight,
     () => 0, () => 0)
 }

@@ -27,7 +27,7 @@ abstract class Widget(parent: FramePanel, values: Varying[_] *)
 
   def redraw(focus: Boolean, theme: ColorScheme): Unit
 
-  def handleKeypress(keypress: Int): Unit
+  def handleKeypress(keypress: Int): Unit = Unit
   def handleArrowPress(k: Int): Boolean = false
 
 

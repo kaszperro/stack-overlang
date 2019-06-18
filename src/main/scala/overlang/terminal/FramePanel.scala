@@ -54,7 +54,7 @@ case class FramePanel(parent: Component)
 
   var currentTab = 0
   var tabs =
-    mutable.MutableList[(ListBuffer[Widget], Int, ListBuffer[Int])]((ListBuffer[Widget](), 0, ListBuffer[Int]()))
+    mutable.MutableList[(ListBuffer[Widget], Int, ListBuffer[Int])]((ListBuffer[Widget](), -1, ListBuffer[Int]()))
 
   def widgets = tabs(currentTab)._1
 
@@ -72,6 +72,7 @@ case class FramePanel(parent: Component)
   def addWidget(widget: Widget): Unit = {
     widgets += widget
     tabs(currentTab) = (widgets, widgetFocus, heights :+ 0)
+    if (widget.focusable) tabs(currentTab) = (widgets, widgets.size - 1, heights)
   }
 
   def addTab(): Unit = {

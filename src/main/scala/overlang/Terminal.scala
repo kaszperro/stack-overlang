@@ -3,7 +3,7 @@ package overlang
 import java.io.File
 
 import net.team2xh.scurses.Scurses
-import overlang.terminal.{ExternalEditor, Frame, FrameStack, Input, SearchResultsFrame}
+import overlang.terminal.{ClickableLabels, ExternalEditor, Frame, FrameStack, Input, Labels, SearchResultsFrame}
 
 object Terminal extends App {
   def saveAs(str: String): Unit = {
@@ -19,6 +19,10 @@ object Terminal extends App {
     val stack = new FrameStack
     val frame = Frame(Some("Stack-Overlang"))
 
+
+    Labels(frame.panel, Help.text,
+      () => frame.panel.innerWidth, () => frame.panel.innerHeight - 1,
+      () => 0, () => 0)
 
     Input(frame.panel, "text",
       (text) => {
@@ -37,7 +41,6 @@ object Terminal extends App {
       },
       widthFun = () => frame.panel.innerWidth, heightFun = () => 1,
       offsetYFun = () => frame.panel.innerHeight - 1)
-
 
     stack.add(frame)
     stack.show()

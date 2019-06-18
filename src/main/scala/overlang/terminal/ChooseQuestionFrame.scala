@@ -6,7 +6,7 @@ import overlang.stackOverflowBackend.{StackOverflowConnection, StackOverflowPars
 
 
 class ChooseQuestionFrame(array: Array[StackOverflowQuestion])(implicit screen: Scurses) extends Frame(Some("Choose question")) {
-  Labels(panel, array,
+  ClickableLabels(panel, array,
     () => panel.innerWidth, () => panel.innerHeight,
     () => 0, () => 0)
 }
