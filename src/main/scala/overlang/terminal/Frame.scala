@@ -5,12 +5,18 @@ import net.team2xh.onions.utils.Varying
 import net.team2xh.onions.{Component, Symbols, Themes}
 import net.team2xh.scurses.{Keys, Scurses}
 
-case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = false,
+case class Frame(var title: Option[String] = None, var debug: Varying[Boolean] = false,
                  var theme: Varying[ColorScheme] = Themes.default)
                 (implicit screen: Scurses) extends Component(None) {
 
-  private var stack : FrameStack = null
+  def setTitle(str: Option[String]): Unit = {
+    title = str
+  }
+
+  private var stack: FrameStack = null
+
   def onAttach(stack: FrameStack) = this.stack = stack
+
   def getStack = stack
 
   def beforeDraw() = {
@@ -53,6 +59,7 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
 
 
   var toDelete = false;
+
   def close(): Unit = {
     toDelete = false;
   }
@@ -72,7 +79,7 @@ case class Frame(title: Option[String] = None, var debug: Varying[Boolean] = fal
   }
 
   def event(k: Int): Unit = {
-    if(k == Keys.ESC) {
+    if (k == Keys.ESC) {
       toDelete = true
       return
     }
