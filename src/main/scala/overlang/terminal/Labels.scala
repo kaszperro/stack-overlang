@@ -7,12 +7,25 @@ import net.team2xh.scurses.{Colors, Keys, Scurses}
 import overlang.ActiveFile
 import overlang.stackOverflowBackend.{StackOverflowAnswer, StackOverflowConnection, StackOverflowParser, StackOverflowQuestion}
 
-case class Labels(parent: FramePanel, text: String,
+case class Labels(parent: FramePanel, var text: String,
                   widthFun: () => Int, heightFun: () => Int,
                   offsetXFun: () => Int, offsetYFun: () => Int)
                  (implicit screen: Scurses) extends Widget(parent) {
 
+  var color1: Int = Colors.BRIGHT_WHITE
+  var color2: Int = Colors.DIM_BLACK
 
+
+  def setColor(color1: Int, color2: Int) = {
+    this.color1 = color1
+    this.color2 = color2
+    needsRedraw = true
+  }
+
+  def setText(text: String) = {
+    this.text = text
+    needsRedraw = true
+  }
 
   def wrapText(text: String, width: Int, alignment: Int = ALIGN_LEFT): Seq[String] = {
     text.split("\n")
@@ -27,7 +40,7 @@ case class Labels(parent: FramePanel, text: String,
   override def redraw(focus: Boolean, theme: ColorScheme): Unit = {
     val lines = wrapText(text, innerWidth - 1, TextWrap.ALIGN_LEFT)
     for ((line, i) <- lines.zipWithIndex) {
-      screen.put(0, i, " " + line + " " * (innerWidth - line.length - 1), Colors.BRIGHT_WHITE, Colors.DIM_BLACK)
+      screen.put(0, i, " " + line + " " * (innerWidth - line.length - 1), color1, color2)
     }
   }
 
