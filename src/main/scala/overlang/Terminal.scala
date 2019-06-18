@@ -19,21 +19,6 @@ object Terminal extends App {
     val stack = new FrameStack
     val frame = Frame(Some("Stack-Overlang"))
 
-    //
-    //    var testString = "Siemanko testowy tekst"
-    //    var testString2 = "Siemanko testowy tekst długi bardzo ijdsiadjaoisdjoisajdoiasjdoiajsoidaisodhasoiudhoiashdioashdoiasi"
-    //
-    //    var listBuff = new ListBuffer[String]
-    //    for (i <- 1 to 20) {
-    //      listBuff += i + ". " + testString
-    //      listBuff += i + ". " + testString2
-    //    }
-    //
-    //    val array = listBuff.toArray
-
-    //    new Labels[String](frame.panel, array, s => s, s => s,
-    //      () => frame.panel.innerWidth, () => frame.panel.innerHeight - 1,
-    //      () => 0, () => 0)
 
     Input(frame.panel, "text",
       (text) => {
