@@ -40,7 +40,9 @@ object StackOverflowParser {
 
   def parseAnswerBodyToListOfCode(body: String): List[String] = {
     val codeRegex: Regex = "(?<=<pre.*><code>)(?s).*?(?=</code></pre>)".r
-    codeRegex.findAllMatchIn(body).map(b => b.toString).toList
+    val preHTML = codeRegex.findAllMatchIn(body).map(b => b.toString).toList
+
+    preHTML.map(s => s.replaceAll("&lt;", "<").replaceAll("&gt;", ">"))
   }
 
 
