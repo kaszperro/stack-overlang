@@ -2,10 +2,12 @@ package overlang
 
 import java.io.File
 
-import net.team2xh.scurses.Scurses
+import net.team2xh.scurses.{Colors, Scurses}
 import overlang.terminal.{ClickableLabels, ExternalEditor, Frame, FrameStack, Input, Labels, SearchResultsFrame}
 
 object Terminal {
+  var errorLabel: Labels = _
+
   def saveAs(frame: Frame, str: String): Unit = {
     val text: String = ActiveFile.readAll
     ActiveFile.setFile(str)
@@ -17,6 +19,7 @@ object Terminal {
     frame.setTitle(Some(ActiveFile.getFile.getName + " - Stack-Overlang"))
 
   }
+
 
   def main(args: Array[String]): Unit = {
     ActiveFile.setFile(File.createTempFile("overlang", "tmp"))
@@ -31,21 +34,27 @@ object Terminal {
       }
 
       Labels(frame.panel, Help.text,
-        () => frame.panel.innerWidth, () => frame.panel.innerHeight - 1,
+        () => frame.panel.innerWidth, () => frame.panel.innerHeight - 2,
         () => 0, () => 0)
 
+      errorLabel = Labels(frame.panel, "",
+        () => frame.panel.innerWidth, () => 1,
+        () => 0, () => frame.panel.innerHeight - 2)
+      errorLabel.setColor(Colors.BRIGHT_RED, Colors.DIM_BLACK)
+
       Input(frame.panel, "text",
-        (text) => {
+        text => {
           val addPattern = """add (\d+)""".r
           val searchPattern = """search (.+)""".r
           val saveAsPattern = """saveas (.+)""".r
           val editPattern = """edit""".r
+          errorLabel.setText("")
           text match {
             case addPattern(_) =>
             case saveAsPattern(filePath) => saveAs(frame, filePath)
-            case searchPattern(text) => stack.add(SearchResultsFrame(text))
+            case searchPattern(query) => stack.add(SearchResultsFrame(query))
             case editPattern() => ExternalEditor.editFile(frame, ActiveFile.getFile)
-            case _ =>
+            case _ => errorLabel.setText("Syntax error")
           }
           Unit
         },
