@@ -8,7 +8,7 @@ import overlang.terminal.{ClickableLabels, ExternalEditor, Frame, FrameStack, In
 object Terminal {
   def saveAs(frame: Frame, str: String): Unit = {
     val text: String = ActiveFile.readAll
-    ActiveFile.setFile(new File(str))
+    ActiveFile.setFile(str)
     ActiveFile.save(text)
     updateTitle(frame)
   }
