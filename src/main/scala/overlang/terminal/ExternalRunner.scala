@@ -5,7 +5,7 @@ import java.io.File
 object ExternalRunner {
 
   def runWith(frame: Frame, labels: Labels, file: File, program: String) {
-    val processBuilder = new ProcessBuilder("sh", "-c \"" + program +" " + file.getPath +"\"")
+    val processBuilder = new ProcessBuilder("sh", "-c", "\"" + program + " " + file.getAbsolutePath + "\"")
     processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT)
     processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT)
     processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT)
