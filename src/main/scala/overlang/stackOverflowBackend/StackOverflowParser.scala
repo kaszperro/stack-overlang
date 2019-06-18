@@ -23,7 +23,7 @@ object StackOverflowParser {
       title <- c.get[String]("title")
       score <- c.get[Int]("question_score")
     } yield
-      new StackOverflowQuestion(id, title, score)
+      new StackOverflowQuestion(id, replaceHTMLCharacters(title), score)
 
 
   implicit val SearchResultDecoder: Decoder[SearchResult] = (c: HCursor) => {
@@ -38,11 +38,18 @@ object StackOverflowParser {
   }
 
 
+  def replaceHTMLCharacters(string: String): String = {
+    string.replaceAll("&lt;", "<").
+      replaceAll("&gt;", ">").
+      replaceAll("&quot;", "\"")
+  }
+
+
   def parseAnswerBodyToListOfCode(body: String): List[String] = {
     val codeRegex: Regex = "(?<=<pre.*><code>)(?s).*?(?=</code></pre>)".r
     val preHTML = codeRegex.findAllMatchIn(body).map(b => b.toString).toList
 
-    preHTML.map(s => s.replaceAll("&lt;", "<").replaceAll("&gt;", ">"))
+    preHTML.map(s => replaceHTMLCharacters(s))
   }
 
 
