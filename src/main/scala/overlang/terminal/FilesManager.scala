@@ -29,8 +29,10 @@ object FilesManager {
   def writeToFile(content: String, filePath: String): Unit = {
     val file = new File(filePath)
     file.createNewFile()
+    writeToFile(content, file)
+  }
 
-
+  def writeToFile(content: String, file: File): Unit = {
     new PrintWriter(file) {
       try {
         print(content)
@@ -41,7 +43,10 @@ object FilesManager {
   }
 
   def readFile(file: File): String = {
-    Source.fromFile(file).getLines().mkString("\n")
+    val fromFile = Source.fromFile(file)
+    val ret = fromFile.getLines().mkString("\n")
+    fromFile.close()
+    ret
   }
 
 
