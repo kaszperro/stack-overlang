@@ -3,10 +3,11 @@ package overlang
 import java.io.File
 
 import net.team2xh.scurses.{Colors, Scurses}
-import overlang.terminal.{ClickableLabels, ExternalEditor, Frame, FrameStack, Input, Labels, SearchResultsFrame}
+import overlang.terminal.{ClickableLabels, ExternalEditor, ExternalRunner, Frame, FrameStack, Input, Labels, SearchResultsFrame}
 
 object Terminal {
   var errorLabel: Labels = _
+  var infoLabel: Labels = _
 
   def saveAs(frame: Frame, str: String): Unit = {
     val text: String = ActiveFile.readAll
@@ -21,6 +22,7 @@ object Terminal {
   }
 
 
+
   def main(args: Array[String]): Unit = {
     ActiveFile.setFile(File.createTempFile("overlang", "tmp"))
 
@@ -33,7 +35,7 @@ object Terminal {
         updateTitle(frame)
       }
 
-      Labels(frame.panel, Help.text,
+      infoLabel = Labels(frame.panel, Help.text,
         () => frame.panel.innerWidth, () => frame.panel.innerHeight - 2,
         () => 0, () => 0)
 
@@ -48,12 +50,15 @@ object Terminal {
           val searchPattern = """search (.+)""".r
           val saveAsPattern = """saveas (.+)""".r
           val editPattern = """edit""".r
+          val runWithPattern = """runwith (.+)""".r
+
           errorLabel.setText("")
           text match {
             case addPattern(_) =>
             case saveAsPattern(filePath) => saveAs(frame, filePath)
             case searchPattern(query) => stack.add(SearchResultsFrame(query))
             case editPattern() => ExternalEditor.editFile(frame, ActiveFile.getFile)
+            case runWithPattern(program) => ExternalRunner.runWith(frame, infoLabel, ActiveFile.getFile, program)
             case _ => errorLabel.setText("Syntax error")
           }
           Unit
