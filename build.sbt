@@ -18,3 +18,5 @@ val scursesVersion = "1.0.1"
 
 libraryDependencies += "net.team2xh" %% "onions" % scursesVersion
 libraryDependencies += "net.team2xh" %% "scurses" % scursesVersion
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
