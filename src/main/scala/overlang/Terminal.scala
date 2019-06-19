@@ -3,7 +3,7 @@ package overlang
 import java.io.File
 
 import net.team2xh.scurses.{Colors, Scurses}
-import overlang.terminal.{ClickableLabels, ExternalEditor, ExternalRunner, Frame, FrameStack, Input, Labels, SearchResultsFrame}
+import overlang.terminal.{ExternalEditor, ExternalRunner, Frame, FrameStack, Input, Labels, OutputFrame, SearchResultsFrame}
 
 object Terminal {
   var errorLabel: Labels = _
@@ -51,6 +51,7 @@ object Terminal {
           val saveAsPattern = """saveas (.+)""".r
           val editPattern = """edit""".r
           val runWithPattern = """runwith (.+)""".r
+          val exitPattern = """exit""".r
 
           errorLabel.setText("")
           text match {
@@ -58,7 +59,8 @@ object Terminal {
             case saveAsPattern(filePath) => saveAs(frame, filePath)
             case searchPattern(query) => stack.add(SearchResultsFrame(query))
             case editPattern() => ExternalEditor.editFile(frame, ActiveFile.getFile)
-            case runWithPattern(program) => ExternalRunner.runWith(frame, infoLabel, ActiveFile.getFile, program)
+            case runWithPattern(program) => stack.add(new OutputFrame(ExternalRunner.runWith(ActiveFile.getFile, program)))
+            case exitPattern() => System.exit(0)
             case _ => errorLabel.setText("Syntax error")
           }
           Unit
