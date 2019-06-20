@@ -22,9 +22,12 @@ case class Labels(parent: FramePanel, var text: String,
     needsRedraw = true
   }
 
-  def setText(text: String) = {
-    this.text = text
-    needsRedraw = true
+  def setText(color: Int, text: String) = {
+    this.synchronized {
+      this.color1 = color
+      this.text = text
+      needsRedraw = true
+    }
   }
 
   def wrapText(text: String, width: Int, alignment: Int = ALIGN_LEFT): Seq[String] = {

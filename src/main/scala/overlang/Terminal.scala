@@ -4,7 +4,10 @@ import java.io.File
 
 import net.team2xh.scurses.{Colors, Scurses}
 import overlang.stackOverflowBackend.{StackOverflowAnswer, StackOverflowConnection}
+import overlang.terminal.commands.{Command, Commands}
 import overlang.terminal.{ExternalEditor, ExternalRunner, Frame, FrameManager, Input, Labels, OutputFrame, SearchResultsFrame}
+
+import scala.collection.mutable
 
 object Terminal {
   var errorLabel: Labels = _
@@ -23,7 +26,6 @@ object Terminal {
   }
 
 
-
   def main(args: Array[String]): Unit = {
     ActiveFile.setFile(File.createTempFile("overlang", "tmp"))
 
@@ -36,37 +38,25 @@ object Terminal {
         updateTitle(frame)
       }
 
-      infoLabel = Labels(frame.panel, Help.text,
-        () => frame.panel.innerWidth, () => frame.panel.innerHeight - 2,
-        () => 0, () => 0)
-
       errorLabel = Labels(frame.panel, "",
         () => frame.panel.innerWidth, () => 1,
         () => 0, () => frame.panel.innerHeight - 2)
       errorLabel.setColor(Colors.BRIGHT_RED, Colors.DIM_BLACK)
 
+      val commands: mutable.MutableList[Command] = Commands.getCommands(frame, errorLabel)
+
+      infoLabel = Labels(frame.panel, commands.map(a => a.help).reduce((a, b) => a + " \n" + b),
+        () => frame.panel.innerWidth, () => frame.panel.innerHeight - 2,
+        () => 0, () => 0)
+
+
+
       Input(frame.panel, "text",
         text => {
-          val addPattern = """add (\d+)""".r
-          val searchPattern = """search (.+)""".r
-          val saveAsPattern = """saveas (.+)""".r
-          val editPattern = """edit""".r
-          val runWithPattern = """runwith (.+)""".r
-          val exitPattern = """exit""".r
-
-          errorLabel.setText("")
-          text match {
-            case addPattern(id) => {
-              ActiveFile.append(StackOverflowAnswer(Integer.parseInt(id)).codeBlocks.mkString)
-              errorLabel.setText("Added answer")
-            }
-            case saveAsPattern(filePath) => saveAs(frame, filePath)
-            case searchPattern(query) => stack.add(SearchResultsFrame(query))
-            case editPattern() => ExternalEditor.editFile(frame, ActiveFile.getFile)
-            case runWithPattern(program) => stack.add(new OutputFrame(ExternalRunner.runWith(ActiveFile.getFile, program)))
-            case exitPattern() => System.exit(0)
-            case _ => errorLabel.setText("Syntax error")
-          }
+          var matched = false
+          commands.foreach(a => matched |= a.run(text))
+          if (!matched)
+            errorLabel.setText(Colors.BRIGHT_RED, "Cannot match any command")
           Unit
         },
         widthFun = () => frame.panel.innerWidth, heightFun = () => 1,

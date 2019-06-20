@@ -32,7 +32,11 @@ class FrameManager(implicit screen: Scurses) {
     }
 
     while (true) {
-      val k = screen.keypress()
+      var k = -1
+      if (System.in.available() > 0)
+        k = screen.keypress()
+      else
+        Thread.sleep(20)
 
       if (k == Keys.RESIZE) {
         size = screen.size
@@ -47,7 +51,10 @@ class FrameManager(implicit screen: Scurses) {
 
       if (frames.nonEmpty) {
         val frame = frames.last
-        frames.last.event(k)
+        if (k != -1)
+          frame.event(k)
+        else
+          frame.redraw()
         frames = frames.filter(a => !a.toDelete)
         if (frames.nonEmpty && frame != frames.last) {
           frames.last.beforeDraw()

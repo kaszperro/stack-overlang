@@ -1,7 +1,8 @@
 package overlang.terminal.commands
 
-trait Command {
-  def run(): Unit
+import overlang.terminal.{Frame, Labels}
 
-  def canRun(string: String): Boolean
+abstract class Command(val rootFrame: Frame, val label: Labels) {
+  def run(command: String): Boolean
+  def help : String
 }

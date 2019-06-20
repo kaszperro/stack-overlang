@@ -17,7 +17,7 @@ case class Frame(var title: Option[String] = None, var debug: Varying[Boolean] =
 
   def onAttach(stack: FrameManager) = this.stack = stack
 
-  def getStack = stack
+  def getFrameManager = stack
 
   def beforeDraw() = {
     clear()

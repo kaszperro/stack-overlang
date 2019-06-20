@@ -121,7 +121,7 @@ case class ClickableLabels[T <: SearchResult](parent: FramePanel, elements: Arra
         case question: StackOverflowQuestion =>
           val res = StackOverflowConnection.getAnswersByQuestionId(question.id)
           val ans = StackOverflowParser.parseAnswersResponseToListOfAnswers(res)
-          frame.getStack.add(new ChooseAnswerFrame(ans.filter(a => a.codeBlocks.nonEmpty).toArray))
+          frame.getFrameManager.add(new ChooseAnswerFrame(ans.filter(a => a.codeBlocks.nonEmpty).toArray))
       }
     }
 
