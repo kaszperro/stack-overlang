@@ -13,9 +13,9 @@ case class Frame(var title: Option[String] = None, var debug: Varying[Boolean] =
     title = str
   }
 
-  private var stack: FrameStack = null
+  private var stack: FrameManager = null
 
-  def onAttach(stack: FrameStack) = this.stack = stack
+  def onAttach(stack: FrameManager) = this.stack = stack
 
   def getStack = stack
 

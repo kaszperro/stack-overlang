@@ -5,7 +5,7 @@ import net.team2xh.scurses.{Keys, Scurses}
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
-class FrameStack(implicit screen: Scurses) {
+class FrameManager(implicit screen: Scurses) {
   var frames: ArrayBuffer[Frame] = mutable.ArrayBuffer[Frame]()
 
   def add(frame: Frame): Unit = {

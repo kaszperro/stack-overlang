@@ -3,7 +3,7 @@ package overlang
 import java.io.File
 
 import net.team2xh.scurses.{Colors, Scurses}
-import overlang.terminal.{ExternalEditor, ExternalRunner, Frame, FrameStack, Input, Labels, OutputFrame, SearchResultsFrame}
+import overlang.terminal.{ExternalEditor, ExternalRunner, Frame, FrameManager, Input, Labels, OutputFrame, SearchResultsFrame}
 
 object Terminal {
   var errorLabel: Labels = _
@@ -27,7 +27,7 @@ object Terminal {
     ActiveFile.setFile(File.createTempFile("overlang", "tmp"))
 
     Scurses { implicit screen =>
-      val stack = new FrameStack
+      val stack = new FrameManager
       val frame = Frame(Some("temporary file - Stack-Overlang"))
 
       if (args.length > 0) {
