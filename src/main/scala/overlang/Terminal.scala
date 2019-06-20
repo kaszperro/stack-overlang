@@ -3,6 +3,7 @@ package overlang
 import java.io.File
 
 import net.team2xh.scurses.{Colors, Scurses}
+import overlang.stackOverflowBackend.{StackOverflowAnswer, StackOverflowConnection}
 import overlang.terminal.{ExternalEditor, ExternalRunner, Frame, FrameManager, Input, Labels, OutputFrame, SearchResultsFrame}
 
 object Terminal {
@@ -55,7 +56,10 @@ object Terminal {
 
           errorLabel.setText("")
           text match {
-            case addPattern(_) =>
+            case addPattern(id) => {
+              ActiveFile.append(StackOverflowAnswer(Integer.parseInt(id)).codeBlocks.mkString)
+              errorLabel.setText("Added answer")
+            }
             case saveAsPattern(filePath) => saveAs(frame, filePath)
             case searchPattern(query) => stack.add(SearchResultsFrame(query))
             case editPattern() => ExternalEditor.editFile(frame, ActiveFile.getFile)
