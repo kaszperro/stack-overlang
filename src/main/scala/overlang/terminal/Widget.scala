@@ -5,7 +5,7 @@ import net.team2xh.onions.Themes.ColorScheme
 import net.team2xh.onions.utils.Varying
 import net.team2xh.scurses.Scurses
 
-abstract class Widget(parent: FramePanel, values: Varying[_] *)
+abstract class Widget(parent: FramePanel, values: Varying[_]*)
                      (implicit screen: Scurses) extends Component(Some(parent)) {
 
 
@@ -28,13 +28,17 @@ abstract class Widget(parent: FramePanel, values: Varying[_] *)
   def redraw(focus: Boolean, theme: ColorScheme): Unit
 
   def handleKeypress(keypress: Int): Unit = Unit
+
   def handleArrowPress(k: Int): Boolean = false
 
 
   override def innerWidth: Int = parent.innerWidth
+
   override def innerHeight: Int = parent.innerHeight
+
   def offsetX: Int = 0
+
   def offsetY: Int = 0
 
-  override def toString = this.getClass.getSimpleName + " @ " + Integer.toHexString(System.identityHashCode(this))
+  override def toString: String = this.getClass.getSimpleName + " @ " + Integer.toHexString(System.identityHashCode(this))
 }

@@ -17,19 +17,9 @@ object ActiveFile {
 
   def getFile: File = file
 
-  private def save(text: String, append: Boolean): Unit = {
-    val fw = new FileWriter(file, append)
+  def append(text: String): Unit = FilesManager.appendToFile(text, file)
 
-    try {
-      fw.write(text)
-    }
-    finally fw.close()
-  }
-
-
-  def append(text: String): Unit = save(text, append = true)
-
-  def save(text: String): Unit = save(text, append = false)
+  def save(text: String): Unit = FilesManager.writeFile(text, file)
 
   def readAll: String = FilesManager.readFile(file)
 

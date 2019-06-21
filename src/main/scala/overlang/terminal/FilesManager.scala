@@ -1,6 +1,6 @@
 package overlang.terminal
 
-import java.io.{File, PrintWriter}
+import java.io.{File, FileWriter}
 
 import scala.io.Source
 
@@ -16,31 +16,39 @@ object FilesManager {
     )
 
     tempFi.deleteOnExit()
-    new PrintWriter(tempFi) {
-      try {
-        write(contents)
-      } finally {
-        close()
-      }
-    }
+    writeFile(contents, tempFi)
     tempFi
   }
 
-  def writeToFile(content: String, filePath: String): Unit = {
-    val file = new File(filePath)
-    file.createNewFile()
-    writeToFile(content, file)
+  private def writeHelper(content: String, file: File, append: Boolean): Unit = {
+    val fw = new FileWriter(file, append)
+
+    try {
+      fw.write(content)
+    }
+    finally fw.close()
   }
 
-  def writeToFile(content: String, file: File): Unit = {
-    new PrintWriter(file) {
-      try {
-        print(content)
-      } finally {
-        close()
-      }
-    }
+  def writeFile(content: String, filePath: String): Unit = {
+    val file = new File(filePath)
+    file.createNewFile()
+    writeHelper(content, file, append = false)
   }
+
+  def writeFile(content: String, file: File): Unit = {
+    writeHelper(content, file, append = false)
+  }
+
+  def appendToFile(content: String, filePath: String): Unit = {
+    val file = new File(filePath)
+    file.createNewFile()
+    writeHelper(content, file, append = true)
+  }
+
+  def appendToFile(content: String, file: File): Unit = {
+    writeHelper(content, file, append = true)
+  }
+
 
   def readFile(file: File): String = {
     val fromFile = Source.fromFile(file)

@@ -1,7 +1,5 @@
 package overlang.terminal
 
-import scala.concurrent.duration.Duration
-
 trait SearchResult {
   def extractText(): String
 

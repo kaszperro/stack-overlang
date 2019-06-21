@@ -5,14 +5,14 @@ import net.team2xh.onions.Themes.ColorScheme
 import net.team2xh.onions.utils.{Drawing, Varying}
 import net.team2xh.scurses.{Keys, Scurses}
 
-case class Input(parent: FramePanel, var defaultText: String = "Input", var enterAction: (String) => {},
+case class Input(parent: FramePanel, var defaultText: String = "Input", var enterAction: String => {},
                  widthFun: () => Int = () => 10, heightFun: () => Int = () => 1,
                  offsetXFun: () => Int = () => 0, offsetYFun: () => Int = () => 0)
                 (implicit screen: Scurses) extends Widget(parent) {
 
-  var text: Varying[String] = ""
+  private var text: Varying[String] = ""
 
-  def cursorIndex = text.value.length
+  private def cursorIndex = text.value.length
 
   override def redraw(focus: Boolean, theme: ColorScheme): Unit = {
     val cursorSymbol = if (focus) Symbols.BLOCK else " "
@@ -47,6 +47,4 @@ case class Input(parent: FramePanel, var defaultText: String = "Input", var ente
   override def innerWidth: Int = widthFun()
 
   override def innerHeight: Int = heightFun()
-
-
 }

@@ -12,17 +12,17 @@ case class Labels(parent: FramePanel, var text: String,
                   offsetXFun: () => Int, offsetYFun: () => Int)
                  (implicit screen: Scurses) extends Widget(parent) {
 
-  var color1: Int = Colors.BRIGHT_WHITE
-  var color2: Int = Colors.DIM_BLACK
+  private var color1: Int = Colors.BRIGHT_WHITE
+  private var color2: Int = Colors.DIM_BLACK
 
 
-  def setColor(color1: Int, color2: Int) = {
+  def setColor(color1: Int, color2: Int): Unit = {
     this.color1 = color1
     this.color2 = color2
     needsRedraw = true
   }
 
-  def setText(color: Int, text: String) = {
+  def setText(color: Int, text: String): Unit = {
     this.synchronized {
       this.color1 = color
       this.text = text
@@ -30,7 +30,7 @@ case class Labels(parent: FramePanel, var text: String,
     }
   }
 
-  def wrapText(text: String, width: Int, alignment: Int = ALIGN_LEFT): Seq[String] = {
+  private def wrapText(text: String, width: Int, alignment: Int = ALIGN_LEFT)= {
     text.split("\n")
       .map {
         case "" => " "

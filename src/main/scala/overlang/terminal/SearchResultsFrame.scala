@@ -6,7 +6,7 @@ import overlang.stackOverflowBackend.{StackOverflowConnection, StackOverflowPars
 
 class SearchResultsFrame(array: Array[SearchResult])(implicit screen: Scurses) extends Frame(Some("Search Results")) {
 
-  new ClickableLabels(panel, array,
+  ClickableLabels(panel, array,
     () => panel.innerWidth, () => panel.innerHeight,
     () => 0, () => 0)
 }
@@ -14,9 +14,8 @@ class SearchResultsFrame(array: Array[SearchResult])(implicit screen: Scurses) e
 
 object SearchResultsFrame {
   def apply(searchQuery: String)(implicit screen: Scurses): SearchResultsFrame = {
-    val res = StackOverflowConnection.getSearchResultAsString(searchQuery)
-    //FilesManager.writeToFile(res, "./res.txt")
-    val ans = StackOverflowParser.parseSearchResponseToListOfResults(res)
+    val res = StackOverflowConnection.getSearchResult(searchQuery)
+    val ans = StackOverflowParser.parseSearchResult(res)
     new SearchResultsFrame(ans.toArray)
   }
 }

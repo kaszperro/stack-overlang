@@ -13,13 +13,13 @@ case class Frame(var title: Option[String] = None, var debug: Varying[Boolean] =
     title = str
   }
 
-  private var stack: FrameManager = null
+  private var stack: FrameManager = _
 
-  def onAttach(stack: FrameManager) = this.stack = stack
+  def onAttach(stack: FrameManager): Unit = this.stack = stack
 
-  def getFrameManager = stack
+  def getFrameManager: FrameManager = stack
 
-  def beforeDraw() = {
+  def beforeDraw(): Unit = {
     clear()
     panel.markAllForRedraw()
   }

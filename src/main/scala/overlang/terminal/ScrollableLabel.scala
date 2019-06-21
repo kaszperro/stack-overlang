@@ -1,11 +1,7 @@
 package overlang.terminal
 
 import net.team2xh.onions.Themes.ColorScheme
-import net.team2xh.onions.utils.TextWrap
-import net.team2xh.onions.utils.TextWrap.ALIGN_LEFT
 import net.team2xh.scurses.{Colors, Keys, Scurses}
-import overlang.ActiveFile
-import overlang.stackOverflowBackend.{StackOverflowAnswer, StackOverflowConnection, StackOverflowParser, StackOverflowQuestion}
 
 case class ScrollableLabel(parent: FramePanel, text: String,
                            widthFun: () => Int, heightFun: () => Int,
@@ -13,7 +9,7 @@ case class ScrollableLabel(parent: FramePanel, text: String,
                           (implicit screen: Scurses) extends Widget(parent) {
 
   private var firstLine = 0
-  var lines: Seq[String] = _
+  private var lines: Seq[String] = _
 
 
   def wrapText(text: String, width: Int): Seq[String] = {
@@ -26,7 +22,7 @@ case class ScrollableLabel(parent: FramePanel, text: String,
   }
 
 
-  def checkFirstLine() = {
+  private def checkFirstLine(): Unit = {
     if (firstLine >= lines.size - innerHeight)
       firstLine = lines.size - innerHeight
     if (firstLine < 0) firstLine = 0

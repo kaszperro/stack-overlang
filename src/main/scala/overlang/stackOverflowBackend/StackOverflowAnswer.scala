@@ -1,9 +1,6 @@
 package overlang.stackOverflowBackend
 
-import net.team2xh.scurses.Scurses
-import overlang.terminal.{ChooseAnswerFrame, Frame, FramePanel, SearchResult}
-
-import scala.concurrent.duration.Duration
+import overlang.terminal.SearchResult
 
 class StackOverflowAnswer(val id: Int,
                           val score: Int,
@@ -11,15 +8,10 @@ class StackOverflowAnswer(val id: Int,
                           val tags: List[String]) extends SearchResult {
 
   private var tempText: String = _
-  /*private var begin: Long = 0L
-  private var durtaion: Long = 0L
-  private var framePanel: FramePanel = null*/
+
 
   override def extractText(): String = {
-    if (tempText != null) {
-      return tempText
-    }
-
+    if (tempText != null) return tempText
 
     if (codeBlocks.isEmpty) return "[A] score: " + score.toString + "\n\n"
     var string = codeBlocks.reduce((a, b) => a + b + "\n")
@@ -41,8 +33,8 @@ class StackOverflowAnswer(val id: Int,
 
 object StackOverflowAnswer {
   def apply(id: Int): StackOverflowAnswer = {
-    val response = StackOverflowConnection.getAnswerAsString(id)
-    StackOverflowParser.parseAnswerResponseToAnswer(response)
+    val response = StackOverflowConnection.getAnswerById(id)
+    StackOverflowParser.parseAnswer(response)
   }
 
 }

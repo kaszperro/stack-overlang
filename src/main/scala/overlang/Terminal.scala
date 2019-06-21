@@ -13,16 +13,9 @@ object Terminal {
   var errorLabel: Labels = _
   var infoLabel: Labels = _
 
-  def saveAs(frame: Frame, str: String): Unit = {
-    val text: String = ActiveFile.readAll
-    ActiveFile.setFile(str)
-    ActiveFile.save(text)
-    updateTitle(frame)
-  }
 
   def updateTitle(frame: Frame): Unit = {
     frame.setTitle(Some(ActiveFile.getFile.getName + " - Stack-Overlang"))
-
   }
 
 
@@ -48,7 +41,6 @@ object Terminal {
       infoLabel = Labels(frame.panel, commands.map(a => a.help).reduce((a, b) => a + " \n" + b),
         () => frame.panel.innerWidth, () => frame.panel.innerHeight - 2,
         () => 0, () => 0)
-
 
 
       Input(frame.panel, "text",
