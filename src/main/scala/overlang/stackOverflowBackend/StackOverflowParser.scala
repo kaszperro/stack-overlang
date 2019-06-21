@@ -41,6 +41,7 @@ object StackOverflowParser {
   def replaceHTMLCharacters(string: String): String = {
     string.replaceAll("&lt;", "<").
       replaceAll("&gt;", ">").
+      replaceAll("&amp;", "&").
       replaceAll("&quot;", "\"")
   }
 
