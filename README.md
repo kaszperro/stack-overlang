@@ -20,7 +20,7 @@ package overlang.stackOverflowBackend
 
 object Passwords {
   final val StackOverflowApiKey = "YOUR_API_KEY"
-  final val StackOverflowApiSecret = "YOUT_API_SECRET"
+  final val StackOverflowApiSecret = "YOUR_API_SECRET"
 }
 ```
 
