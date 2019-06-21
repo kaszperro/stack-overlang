@@ -69,7 +69,7 @@ object Commands {
       true
     }
 
-    override def help: String = "search <question> searches questions and answers"
+    override def help: String = "search <question> - searches questions and answers"
 
   }
 
@@ -165,7 +165,7 @@ object Commands {
       true
     }
 
-    override def help: String = "editwith <command> - launches actual file in selected text editor"
+    override def help: String = "editwith <program> - launches actual file in selected text editor"
 
   }
 
