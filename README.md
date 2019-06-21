@@ -50,4 +50,12 @@ Inside application you can use various commands:
 `exit` - exits stack-overlang
 
 ## :clipboard: Examples
-todo
+- FizzBuzz in Python
+
+<h1 align="center">
+<a href="https://asciinema.org/a/253002">
+   <img src="https://asciinema.org/a/253002.png" width="50%">
+</a>
+</h1>
+
+- Solving quadratic equation
