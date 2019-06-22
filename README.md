@@ -58,4 +58,9 @@ Inside application you can use various commands:
 </a>
 </h1>
 
-- Solving quadratic equation
+- Script to delete all files with selected extensions in Python
+<h1 align="center">
+<a href="https://asciinema.org/a/253158">
+   <img src="https://asciinema.org/a/253158.png" width="50%">
+</a>
+</h1>
