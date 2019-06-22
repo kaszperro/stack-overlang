@@ -60,7 +60,7 @@ Inside application you can use various commands:
 
 - Script to delete all files with selected extensions in Python
 <h1 align="center">
-<a href="https://asciinema.org/a/253158">
-   <img src="https://asciinema.org/a/253158.png" width="50%">
+<a href="https://asciinema.org/a/253160">
+   <img src="https://asciinema.org/a/253160.png" width="50%">
 </a>
 </h1>
