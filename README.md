@@ -64,3 +64,10 @@ Inside application you can use various commands:
    <img src="https://asciinema.org/a/253160.png" width="50%">
 </a>
 </h1>
+
+- Solving Quadratic equation in Python
+<h1 align="center">
+<a href="https://asciinema.org/a/E8MvrBlh15Rubv1wFO4KcDoKr">
+   <img src="https://asciinema.org/a/E8MvrBlh15Rubv1wFO4KcDoKr.svg" width="50%">
+</a>
+</h1>
