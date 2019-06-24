@@ -1,3 +1,5 @@
+//Based on https://github.com/Tenchi2xh/Scurses/blob/master/onions/src/main/scala/net/team2xh/onions/components/FramePanel.scala
+
 package overlang.terminal
 
 
