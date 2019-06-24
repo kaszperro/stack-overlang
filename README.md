@@ -28,7 +28,7 @@ object Passwords {
 ## 
 
 ## :rocket: Launching
-If you want to create new temporary: `java -jar stack-overlang.jar`
+If you want to create new temporary file use: `java -jar stack-overlang.jar`
 
 If you want to open existing file use: `java -jar stack-overlang.jar file`
 
