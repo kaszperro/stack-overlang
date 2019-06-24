@@ -45,9 +45,7 @@ object Terminal {
 
       Input(frame.panel, "text",
         text => {
-          var matched = false
-          commands.foreach(a => matched |= a.run(text))
-          if (!matched)
+          if (!commands.map(a => a.run(text)).reduce((a, b) => a || b))
             errorLabel.setText(Colors.BRIGHT_RED, "Cannot match any command")
           Unit
         },
@@ -58,6 +56,7 @@ object Terminal {
       stack.show()
 
     }
+    print("\033[H\033[2J")
   }
 
 
