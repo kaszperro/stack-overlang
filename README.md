@@ -28,9 +28,15 @@ object Passwords {
 ## 
 
 ## :rocket: Launching
-If you want to create new temporary: `java -jar stack-overlang.jar`
+If you want to create new temporary file use: `java -jar stack-overlang.jar`
 
 If you want to open existing file use: `java -jar stack-overlang.jar file`
+
+## :point_right: Mini-tutorial
+- You can write commands in main window (the window, you see when launching app)
+- You can go to previous window by clicking ESC
+- You can select questions/answers by arrows and clicking ENTER
+- Questions are marked with [Q] symbol and answers with [A] symbol
 
 ## :loudspeaker: Commands
 Inside application you can use various commands:
